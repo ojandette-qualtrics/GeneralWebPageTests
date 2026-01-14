@@ -4,238 +4,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session Timer with Qualtrics Intercept</title>
+    <title>Matrix question implementation with fieldset</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
-        #survey-iframe { 
-            width: 100%; 
-            height: 500px; 
-            border: 1px solid #ccc; 
-        }
-        #timer-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #f0f0f0;
-            padding: 20px;
-            border: 2px solid #333;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 9999999999999999999;
-            display: none;
-            width: 300px;
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000000002;
-            display: none;
-        }
     </style>
+  <!-- CSS for visual presentation -->
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+  
+  [role="table"] {
+    display: table;
+    width: 100%;
+  }
+  
+  [role="row"] {
+    display: table-row;
+  }
+  
+  [role="cell"], [role="columnheader"] {
+    display: table-cell;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .item-label {
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .matrix-row {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .matrix-header {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  /* Hide duplicate visual labels on smaller screens */
+  @media (min-width: 768px) {
+    .matrix-row label span.sr-only {
+      /* Keep for screen readers but hide visually on larger screens */
+    }
+  }
+</style>
 </head>
 
 <body>
-    <h1>Main Website</h1>
-    <p>This page contains a survey in an iframe and a timer popup that may interrupt.</p>
-    
-    <div class="overlay" id="overlay"></div>
-    <div id="timer-popup">
-        <h2>Important Notice!</h2>
-        <p>Your session is about to expire. Would you like to extend your session?</p>
-        <button id="continue-survey">Continue Survey</button>
+    <h1>Matrix question implementation with fieldset</h1>
+    <p> Example matrix question with a fieldset implementation</p>
+<fieldset>
+  <legend>Rate your satisfaction with the following aspects of our service:</legend>
+  
+  <div role="table" aria-label="Satisfaction rating matrix">
+    <!-- Header row for visual reference (optional but helpful) -->
+    <div role="row" class="matrix-header">
+      <div role="columnheader" class="item-label">Aspect</div>
+      <div role="columnheader">Very Unsatisfied</div>
+      <div role="columnheader">Unsatisfied</div>
+      <div role="columnheader">Neutral</div>
+      <div role="columnheader">Satisfied</div>
+      <div role="columnheader">Very Satisfied</div>
     </div>
     
-    <button id="trigger-popup">Simulate Timed Popup</button>
-
-    <script>
-        const overlay = document.getElementById('overlay');
-        const popup = document.getElementById('timer-popup');
-        const continueBtn = document.getElementById('continue-survey');
-        
-        let timer;
-        const SESSION_TIME = 15000; // 1 minute
-        let popupOpen = false;
-
-        function startSessionTimer() {
-            timer = setTimeout(showPopup, SESSION_TIME);
-        }
-
-        function showPopup() {
-            if (!popupOpen) {
-                popupOpen = true;
-                overlay.style.display = 'block';
-                popup.style.display = 'block';
-                
-                // Focus on the Continue Survey button
-                continueBtn.focus();
-            }
-        }
-
-        function resetTimer() {
-            clearTimeout(timer);
-            startSessionTimer(); // Restart the session timer
-        }
-
-        function closePopup() {
-            overlay.style.display = 'none';
-            popup.style.display = 'none';
-            popupOpen = false;
-        }
-
-        function extendSession() {
-            // Unload the Qualtrics intercept
-            if (typeof QSI !== 'undefined' && QSI.API) {
-                QSI.API.unload(); // Unload current intercept
-                QSI.API.load(); // Reload the intercept
-            }
-            closePopup();
-            resetTimer(); // Reset the timer when extending session
-        }
-
-        // Event listeners for buttons
-        continueBtn.addEventListener('click', extendSession);
-        document.getElementById('trigger-popup').addEventListener('click', showPopup);
-
-        // Start the session timer when the page loads
-        window.onload = function() {
-            startSessionTimer();
-        };
-    </script>
-
-    <!-- Qualtrics Website Feedback Snippet -->
-    <script type='text/javascript'>
-        (function(){
-            var g=function(g){
-                this.go=function(){
-                    var a=document.createElement("script");
-                    a.type="text/javascript";
-                    a.src=g; 
-                    document.body&&document.body.appendChild(a)
-                };
-                this.start=function(){
-                    var t=this;
-                    "complete"!==document.readyState?
-                    window.addEventListener?window.addEventListener("load",function(){t.go()},!1):
-                    window.attachEvent&&window.attachEvent("onload",function(){t.go()}):t.go()
-                };
-            };
-            try{
-                // Qualtrics intercept script with your Q_ZID placeholder
-                (new g("https://zn9bwreamgwdwatnf-wellsfargocxsandbox.siteintercept.qualtrics.com/SIE/?Q_ZID=ZN_9BwReAmgWdWatNf")).start();
-            } catch(i){
-                console.error("Qualtrics intercept loading error: ", i);
-            }
-        })();
-        
-//ADA fixes test
- (function() {
-    'use strict';
+    <!-- Row 1 -->
+    <fieldset role="row" class="matrix-row">
+      <legend class="item-label">Customer Service</legend>
+      <div role="cell">
+        <input type="radio" id="service-1" name="service" value="1">
+        <label for="service-1">
+          <span class="sr-only">Customer Service - </span>Very Unsatisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="service-2" name="service" value="2">
+        <label for="service-2">
+          <span class="sr-only">Customer Service - </span>Unsatisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="service-3" name="service" value="3">
+        <label for="service-3">
+          <span class="sr-only">Customer Service - </span>Neutral
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="service-4" name="service" value="4">
+        <label for="service-4">
+          <span class="sr-only">Customer Service - </span>Satisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="service-5" name="service" value="5">
+        <label for="service-5">
+          <span class="sr-only">Customer Service - </span>Very Satisfied
+        </label>
+      </div>
+    </fieldset>
     
-    let modalOpen = false;
-    let inertElements = [];
-     
-    // Define all elements that should remain interactive
-    const interactiveElementSelectors = [
-        // QSI Modal selectors
-        '.QSI_TargetDiv',
-        '[id*="QSI"]',
-        '[class*="QSI"]',
-        '.QSIWebResponsiveDialog-Layout1-SI_8Jna9K5PTcSmf3w_content',
-        // Timer popup
-        '#timer-popup',
-        '[id*="timer"]'
-        // Add more selectors here as needed
-        // '.some-other-modal',
-        // '#another-popup'
-    ];
+    <!-- Row 2 -->
+    <fieldset role="row" class="matrix-row">
+      <legend class="item-label">Product Quality</legend>
+      <div role="cell">
+        <input type="radio" id="quality-1" name="quality" value="1">
+        <label for="quality-1">
+          <span class="sr-only">Product Quality - </span>Very Unsatisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="quality-2" name="quality" value="2">
+        <label for="quality-2">
+          <span class="sr-only">Product Quality - </span>Unsatisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="quality-3" name="quality" value="3">
+        <label for="quality-3">
+          <span class="sr-only">Product Quality - </span>Neutral
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="quality-4" name="quality" value="4">
+        <label for="quality-4">
+          <span class="sr-only">Product Quality - </span>Satisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="quality-5" name="quality" value="5">
+        <label for="quality-5">
+          <span class="sr-only">Product Quality - </span>Very Satisfied
+        </label>
+      </div>
+    </fieldset>
     
-    function isInteractiveElement(element) {
-        // Check if element matches any interactive selector
-        return interactiveElementSelectors.some(selector => {
-            try {
-                return element.matches && element.matches(selector);
-            } catch (e) {
-                // Handle invalid selectors gracefully
-                return false;
-            }
-        }) || 
-        // Additional checks
-        element.id?.includes('QSI') ||
-        element.className?.includes('QSI') ||
-        element.querySelector('.QSIWebResponsiveDialog-Layout1-SI_8Jna9K5PTcSmf3w_content') ||
-        element.id === 'timer-popup';
-    }
-    
-    function setInert() {
-        // Get all direct children of body
-        const bodyChildren = Array.from(document.body.children);
-        
-        bodyChildren.forEach(child => {
-            if (!isInteractiveElement(child)) {
-                child.setAttribute('inert', '');
-                inertElements.push(child);
-            }
-        });
-        
-        modalOpen = true;
-        console.log('Main content set to inert, interactive elements excluded:', 
-                   interactiveElementSelectors);
-    }
-    
-    function removeInert() {
-        inertElements.forEach(element => {
-            element.removeAttribute('inert');
-        });
-        inertElements = [];
-        modalOpen = false;
-        console.log('Inert removed from content areas');
-    }
-    
-    // Watch for feedback button clicks
-    document.addEventListener('click', function(event) {
-        if (event.target.closest('#QSIFeedbackButton-btn')) {
-            setTimeout(setInert, 100);
-        }
-        
-        // Watch for close button clicks
-        if (event.target.closest('.QSIWebResponsiveDialog-Layout1-SI_8Jna9K5PTcSmf3w_close-btn')) {
-            removeInert();
-        }
-    });
-    
-    // Watch for modal removal from DOM
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            mutation.removedNodes.forEach(function(node) {
-                if (node.nodeType === 1 && modalOpen) {
-                    const hasModal = node.classList?.contains('QSIWebResponsiveDialog-Layout1-SI_8Jna9K5PTcSmf3w_content') ||
-                                   node.querySelector?.('.QSIWebResponsiveDialog-Layout1-SI_8Jna9K5PTcSmf3w_content');
-                    
-                    if (hasModal) {
-                        removeInert();
-                    }
-                }
-            });
-        });
-    });
-    
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    // Handle Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modalOpen) {
-            removeInert();
-        }
-    });
-    
-})();
-        
-    </script>
-    <div id='ZN_9BwReAmgWdWatNf'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <!-- Row 3 -->
+    <fieldset role="row" class="matrix-row">
+      <legend class="item-label">Delivery Speed</legend>
+      <div role="cell">
+        <input type="radio" id="delivery-1" name="delivery" value="1">
+        <label for="delivery-1">
+          <span class="sr-only">Delivery Speed - </span>Very Unsatisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="delivery-2" name="delivery" value="2">
+        <label for="delivery-2">
+          <span class="sr-only">Delivery Speed - </span>Unsatisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="delivery-3" name="delivery" value="3">
+        <label for="delivery-3">
+          <span class="sr-only">Delivery Speed - </span>Neutral
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="delivery-4" name="delivery" value="4">
+        <label for="delivery-4">
+          <span class="sr-only">Delivery Speed - </span>Satisfied
+        </label>
+      </div>
+      <div role="cell">
+        <input type="radio" id="delivery-5" name="delivery" value="5">
+        <label for="delivery-5">
+          <span class="sr-only">Delivery Speed - </span>Very Satisfied
+        </label>
+      </div>
+    </fieldset>
+  </div>
+</fieldset>
+
+
 </body>
 
 </html>
