@@ -8,7 +8,7 @@
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
     </style>
-  <!-- CSS for visual presentation -->
+<!-- CSS for visual presentation -->
 <style>
   .sr-only {
     position: absolute;
@@ -25,6 +25,7 @@
   [role="table"] {
     display: table;
     width: 100%;
+    border-collapse: collapse;
   }
   
   [role="row"] {
@@ -36,11 +37,19 @@
     padding: 10px;
     text-align: center;
     vertical-align: middle;
+    border: 1px solid #ddd;
   }
   
-  .item-label {
+  /* First column styling */
+  .item-label, .item-label-header {
     text-align: left;
     font-weight: bold;
+    min-width: 150px;
+    width: 25%;
+  }
+  
+  .item-label-header {
+    background-color: #f5f5f5;
   }
   
   .matrix-row {
@@ -54,10 +63,53 @@
     font-weight: bold;
   }
   
-  /* Hide duplicate visual labels on smaller screens */
-  @media (min-width: 768px) {
-    .matrix-row label span.sr-only {
-      /* Keep for screen readers but hide visually on larger screens */
+  .matrix-header [role="columnheader"]:not(.item-label-header) {
+    font-size: 0.9em;
+    min-width: 100px;
+  }
+  
+  /* Style the radio buttons and labels */
+  .matrix-row label {
+    display: inline-block;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  .matrix-row input[type="radio"] {
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    [role="table"] {
+      display: block;
+    }
+    
+    .matrix-header {
+      display: none;
+    }
+    
+    .matrix-row {
+      display: block;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    
+    .matrix-row [role="cell"] {
+      display: block;
+      text-align: left;
+      border: none;
+      padding: 5px 0;
+    }
+    
+    .matrix-row label span[aria-hidden="true"] {
+      display: none;
+    }
+    
+    .matrix-row label::after {
+      content: attr(data-label);
     }
   }
 </style>
@@ -66,13 +118,14 @@
 <body>
     <h1>Matrix question implementation with fieldset</h1>
     <p> Example matrix question with a fieldset implementation</p>
-<fieldset>
+
+    <fieldset>
   <legend>Rate your satisfaction with the following aspects of our service:</legend>
   
   <div role="table" aria-label="Satisfaction rating matrix">
-    <!-- Header row for visual reference (optional but helpful) -->
+    <!-- Header row for visual reference -->
     <div role="row" class="matrix-header">
-      <div role="columnheader" class="item-label">Aspect</div>
+      <div role="columnheader" class="item-label-header"><!-- Empty cell for alignment --></div>
       <div role="columnheader">Very Unsatisfied</div>
       <div role="columnheader">Unsatisfied</div>
       <div role="columnheader">Neutral</div>
@@ -86,31 +139,36 @@
       <div role="cell">
         <input type="radio" id="service-1" name="service" value="1">
         <label for="service-1">
-          <span class="sr-only">Customer Service - </span>Very Unsatisfied
+          <span class="sr-only">Customer Service - Very Unsatisfied</span>
+          <span aria-hidden="true">1</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="service-2" name="service" value="2">
         <label for="service-2">
-          <span class="sr-only">Customer Service - </span>Unsatisfied
+          <span class="sr-only">Customer Service - Unsatisfied</span>
+          <span aria-hidden="true">2</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="service-3" name="service" value="3">
         <label for="service-3">
-          <span class="sr-only">Customer Service - </span>Neutral
+          <span class="sr-only">Customer Service - Neutral</span>
+          <span aria-hidden="true">3</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="service-4" name="service" value="4">
         <label for="service-4">
-          <span class="sr-only">Customer Service - </span>Satisfied
+          <span class="sr-only">Customer Service - Satisfied</span>
+          <span aria-hidden="true">4</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="service-5" name="service" value="5">
         <label for="service-5">
-          <span class="sr-only">Customer Service - </span>Very Satisfied
+          <span class="sr-only">Customer Service - Very Satisfied</span>
+          <span aria-hidden="true">5</span>
         </label>
       </div>
     </fieldset>
@@ -121,31 +179,36 @@
       <div role="cell">
         <input type="radio" id="quality-1" name="quality" value="1">
         <label for="quality-1">
-          <span class="sr-only">Product Quality - </span>Very Unsatisfied
+          <span class="sr-only">Product Quality - Very Unsatisfied</span>
+          <span aria-hidden="true">1</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="quality-2" name="quality" value="2">
         <label for="quality-2">
-          <span class="sr-only">Product Quality - </span>Unsatisfied
+          <span class="sr-only">Product Quality - Unsatisfied</span>
+          <span aria-hidden="true">2</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="quality-3" name="quality" value="3">
         <label for="quality-3">
-          <span class="sr-only">Product Quality - </span>Neutral
+          <span class="sr-only">Product Quality - Neutral</span>
+          <span aria-hidden="true">3</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="quality-4" name="quality" value="4">
         <label for="quality-4">
-          <span class="sr-only">Product Quality - </span>Satisfied
+          <span class="sr-only">Product Quality - Satisfied</span>
+          <span aria-hidden="true">4</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="quality-5" name="quality" value="5">
         <label for="quality-5">
-          <span class="sr-only">Product Quality - </span>Very Satisfied
+          <span class="sr-only">Product Quality - Very Satisfied</span>
+          <span aria-hidden="true">5</span>
         </label>
       </div>
     </fieldset>
@@ -156,31 +219,36 @@
       <div role="cell">
         <input type="radio" id="delivery-1" name="delivery" value="1">
         <label for="delivery-1">
-          <span class="sr-only">Delivery Speed - </span>Very Unsatisfied
+          <span class="sr-only">Delivery Speed - Very Unsatisfied</span>
+          <span aria-hidden="true">1</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="delivery-2" name="delivery" value="2">
         <label for="delivery-2">
-          <span class="sr-only">Delivery Speed - </span>Unsatisfied
+          <span class="sr-only">Delivery Speed - Unsatisfied</span>
+          <span aria-hidden="true">2</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="delivery-3" name="delivery" value="3">
         <label for="delivery-3">
-          <span class="sr-only">Delivery Speed - </span>Neutral
+          <span class="sr-only">Delivery Speed - Neutral</span>
+          <span aria-hidden="true">3</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="delivery-4" name="delivery" value="4">
         <label for="delivery-4">
-          <span class="sr-only">Delivery Speed - </span>Satisfied
+          <span class="sr-only">Delivery Speed - Satisfied</span>
+          <span aria-hidden="true">4</span>
         </label>
       </div>
       <div role="cell">
         <input type="radio" id="delivery-5" name="delivery" value="5">
         <label for="delivery-5">
-          <span class="sr-only">Delivery Speed - </span>Very Satisfied
+          <span class="sr-only">Delivery Speed - Very Satisfied</span>
+          <span aria-hidden="true">5</span>
         </label>
       </div>
     </fieldset>
