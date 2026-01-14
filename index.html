@@ -22,10 +22,11 @@
     border: 0;
   }
   
-  [role="table"] {
+  .matrix-table {
     display: table;
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* This ensures equal column widths */
   }
   
   [role="row"] {
@@ -40,49 +41,63 @@
     border: 1px solid #ddd;
   }
   
-  /* First column styling */
-  .item-label, .item-label-header {
+  /* First column for row labels */
+  .row-label-column {
+    width: 25%;
     text-align: left;
     font-weight: bold;
-    min-width: 150px;
-    width: 25%;
   }
   
-  .item-label-header {
-    background-color: #f5f5f5;
+  /* Rating columns - each gets equal width */
+  .rating-column {
+    width: 15%; /* 75% divided by 5 columns */
   }
   
-  .matrix-row {
-    border: none;
-    margin: 0;
-    padding: 0;
-  }
-  
+  /* Header styling */
   .matrix-header {
     background-color: #f5f5f5;
     font-weight: bold;
   }
   
-  .matrix-header [role="columnheader"]:not(.item-label-header) {
+  .matrix-header .rating-column {
     font-size: 0.9em;
-    min-width: 100px;
   }
   
-  /* Style the radio buttons and labels */
-  .matrix-row label {
-    display: inline-block;
+  /* Fieldset within cells */
+  .matrix-fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .matrix-fieldset legend {
+    padding: 0;
+    font-weight: bold;
+  }
+  
+  /* Center the radio buttons */
+  .rating-column input[type="radio"] {
+    display: block;
+    margin: 0 auto;
     cursor: pointer;
-    padding: 5px;
   }
   
-  .matrix-row input[type="radio"] {
-    margin: 0 5px;
+  /* Make the label clickable area larger */
+  .rating-column label {
+    display: block;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
   }
   
-  /* Responsive design for smaller screens */
+  /* Hover effect for better UX */
+  .rating-column:hover {
+    background-color: #f9f9f9;
+  }
+  
+  /* Responsive design */
   @media (max-width: 768px) {
-    [role="table"] {
+    .matrix-table {
       display: block;
     }
     
@@ -94,22 +109,32 @@
       display: block;
       margin-bottom: 20px;
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 15px;
+      background: #fff;
     }
     
-    .matrix-row [role="cell"] {
+    [role="cell"] {
       display: block;
-      text-align: left;
       border: none;
       padding: 5px 0;
+      text-align: left;
     }
     
-    .matrix-row label span[aria-hidden="true"] {
-      display: none;
+    .rating-column {
+      display: inline-block;
+      width: auto;
+      margin-right: 15px;
     }
     
-    .matrix-row label::after {
-      content: attr(data-label);
+    .rating-column input[type="radio"] {
+      display: inline-block;
+      margin-right: 5px;
+    }
+    
+    .rating-column::before {
+      content: attr(aria-label);
+      display: inline-block;
+      margin-right: 10px;
     }
   }
 </style>
@@ -119,139 +144,136 @@
     <h1>Matrix question implementation with fieldset</h1>
     <p> Example matrix question with a fieldset implementation</p>
 
-    <fieldset>
+ <fieldset>
   <legend>Rate your satisfaction with the following aspects of our service:</legend>
   
-  <div role="table" aria-label="Satisfaction rating matrix">
-    <!-- Header row for visual reference -->
+  <div role="table" aria-label="Satisfaction rating matrix" class="matrix-table">
+    <!-- Header row -->
     <div role="row" class="matrix-header">
-      <div role="columnheader" class="item-label-header"><!-- Empty cell for alignment --></div>
-      <div role="columnheader">Very Unsatisfied</div>
-      <div role="columnheader">Unsatisfied</div>
-      <div role="columnheader">Neutral</div>
-      <div role="columnheader">Satisfied</div>
-      <div role="columnheader">Very Satisfied</div>
+      <div role="columnheader" class="row-label-column"></div>
+      <div role="columnheader" class="rating-column">Very Unsatisfied</div>
+      <div role="columnheader" class="rating-column">Unsatisfied</div>
+      <div role="columnheader" class="rating-column">Neutral</div>
+      <div role="columnheader" class="rating-column">Satisfied</div>
+      <div role="columnheader" class="rating-column">Very Satisfied</div>
     </div>
     
     <!-- Row 1 -->
-    <fieldset role="row" class="matrix-row">
-      <legend class="item-label">Customer Service</legend>
-      <div role="cell">
+    <div role="row" class="matrix-row">
+      <div role="cell" class="row-label-column">
+        <fieldset class="matrix-fieldset">
+          <legend>Customer Service</legend>
+        </fieldset>
+      </div>
+      <div role="cell" class="rating-column">
         <input type="radio" id="service-1" name="service" value="1">
         <label for="service-1">
           <span class="sr-only">Customer Service - Very Unsatisfied</span>
-          <span aria-hidden="true">1</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="service-2" name="service" value="2">
         <label for="service-2">
           <span class="sr-only">Customer Service - Unsatisfied</span>
-          <span aria-hidden="true">2</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="service-3" name="service" value="3">
         <label for="service-3">
           <span class="sr-only">Customer Service - Neutral</span>
-          <span aria-hidden="true">3</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="service-4" name="service" value="4">
         <label for="service-4">
           <span class="sr-only">Customer Service - Satisfied</span>
-          <span aria-hidden="true">4</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="service-5" name="service" value="5">
         <label for="service-5">
           <span class="sr-only">Customer Service - Very Satisfied</span>
-          <span aria-hidden="true">5</span>
         </label>
       </div>
-    </fieldset>
+    </div>
     
     <!-- Row 2 -->
-    <fieldset role="row" class="matrix-row">
-      <legend class="item-label">Product Quality</legend>
-      <div role="cell">
+    <div role="row" class="matrix-row">
+      <div role="cell" class="row-label-column">
+        <fieldset class="matrix-fieldset">
+          <legend>Product Quality</legend>
+        </fieldset>
+      </div>
+      <div role="cell" class="rating-column">
         <input type="radio" id="quality-1" name="quality" value="1">
         <label for="quality-1">
           <span class="sr-only">Product Quality - Very Unsatisfied</span>
-          <span aria-hidden="true">1</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="quality-2" name="quality" value="2">
         <label for="quality-2">
           <span class="sr-only">Product Quality - Unsatisfied</span>
-          <span aria-hidden="true">2</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="quality-3" name="quality" value="3">
         <label for="quality-3">
           <span class="sr-only">Product Quality - Neutral</span>
-          <span aria-hidden="true">3</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="quality-4" name="quality" value="4">
         <label for="quality-4">
           <span class="sr-only">Product Quality - Satisfied</span>
-          <span aria-hidden="true">4</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="quality-5" name="quality" value="5">
         <label for="quality-5">
           <span class="sr-only">Product Quality - Very Satisfied</span>
-          <span aria-hidden="true">5</span>
         </label>
       </div>
-    </fieldset>
+    </div>
     
     <!-- Row 3 -->
-    <fieldset role="row" class="matrix-row">
-      <legend class="item-label">Delivery Speed</legend>
-      <div role="cell">
+    <div role="row" class="matrix-row">
+      <div role="cell" class="row-label-column">
+        <fieldset class="matrix-fieldset">
+          <legend>Delivery Speed</legend>
+        </fieldset>
+      </div>
+      <div role="cell" class="rating-column">
         <input type="radio" id="delivery-1" name="delivery" value="1">
         <label for="delivery-1">
           <span class="sr-only">Delivery Speed - Very Unsatisfied</span>
-          <span aria-hidden="true">1</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="delivery-2" name="delivery" value="2">
         <label for="delivery-2">
           <span class="sr-only">Delivery Speed - Unsatisfied</span>
-          <span aria-hidden="true">2</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="delivery-3" name="delivery" value="3">
         <label for="delivery-3">
           <span class="sr-only">Delivery Speed - Neutral</span>
-          <span aria-hidden="true">3</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="delivery-4" name="delivery" value="4">
         <label for="delivery-4">
           <span class="sr-only">Delivery Speed - Satisfied</span>
-          <span aria-hidden="true">4</span>
         </label>
       </div>
-      <div role="cell">
+      <div role="cell" class="rating-column">
         <input type="radio" id="delivery-5" name="delivery" value="5">
         <label for="delivery-5">
           <span class="sr-only">Delivery Speed - Very Satisfied</span>
-          <span aria-hidden="true">5</span>
         </label>
       </div>
-    </fieldset>
+    </div>
   </div>
 </fieldset>
 
